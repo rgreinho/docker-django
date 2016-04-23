@@ -1,0 +1,40 @@
+FROM python:3.5
+
+MAINTAINER {{ cookiecutter.author }} <{{ cookiecutter.author_email }}>
+
+# Create the directory containing the code.
+RUN mkdir -p /code /requirements
+WORKDIR /code
+
+# Define environment variables.
+ENV PYTHONUNBUFFERED 1
+ENV DATABASE_URL postgres://postgres:postgres@db:5432/postgres
+ENV REDIS_URL redis://redis:6379
+ENV CELERY_BROKER_URL amqp://guest:guest@rabbitmq:5672//
+ENV CELERY_RESULT_BACKEND amqp://guest:guest@rabbitmq:5672//
+
+# Update the package list.
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+
+    # Install postgresql client.
+    postgresql-client-9.4 \
+
+    # Cleaning up.
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Copy the requirements files.
+COPY requirements/* /requirements/
+
+# Install the pip packages.
+RUN pip install -q -r /requirements/local.txt
+
+# Copy django entry point.
+COPY docker/{{ cookiecutter.repo_name }}/django-entrypoint.sh /
+
+# Create unprivileged user for celery.
+RUN adduser --disabled-password --gecos '' celery
+
+# Copy celery worker entry point.
+COPY docker/{{ cookiecutter.repo_name }}/celery-entrypoint.sh /
