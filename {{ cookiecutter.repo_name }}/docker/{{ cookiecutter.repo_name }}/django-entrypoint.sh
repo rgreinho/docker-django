@@ -11,4 +11,4 @@ done
 python manage.py migrate
 
 # Start development server on public ip interface, on port 8000.
-exec gunicorn -b 0.0.0.0:8000 {{ cookiecutter.repo_name }}.wsgi
+exec gunicorn --reload -b 0.0.0.0:8000 {{ cookiecutter.repo_name }}.wsgi
