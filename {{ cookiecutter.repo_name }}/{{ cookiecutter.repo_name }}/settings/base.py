@@ -1,6 +1,6 @@
 import os
-from urllib.parse import urlparse
 import sys
+from urllib.parse import urlparse
 
 import dj_database_url
 
@@ -11,15 +11,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def root(x):
     return os.path.join(BASE_DIR, x)
 
+
 # Insert the apps dir at the top of your path.
 sys.path.insert(0, root('apps'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'CHANGE THIS!!!'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = True
 
 # Allow all host headers
 # SECURITY WARNING: don't run with this setting in production!
