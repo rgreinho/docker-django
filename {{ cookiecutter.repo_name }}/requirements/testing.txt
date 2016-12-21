@@ -1,4 +1,2 @@
--r base.txt
-
-model-mommy
-tox
+-r _base.txt
+-r _tests.txt

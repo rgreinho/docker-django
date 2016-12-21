@@ -1,0 +1,4 @@
+[run]
+omit =
+    *__init__.py
+    {{ cookiecutter.repo_name }}/apps/{{ cookiecutter.django_app }}/tests/*

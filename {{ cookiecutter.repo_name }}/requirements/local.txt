@@ -1,5 +1,10 @@
--r testing.txt
+-r _base.txt
+-r _docs.txt
+-r _tests.txt
+-r _static.txt
 
+bpython
 q
-Sphinx
-yapf
+tox==2.5.0
+wheel==0.29.0
+yapf==0.14.0

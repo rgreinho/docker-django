@@ -1,0 +1,14 @@
+Django==1.10.4
+celery==3.1.23
+dj-database-url==0.4.1
+django-celery==3.1.17
+django-model-utils==2.6
+django-redis-cache==1.7.1
+flower==0.9.1
+gunicorn==19.6.0
+lxml==3.7.0
+pbr==1.10.0
+psycopg2==2.6.2
+redis==2.10.5
+requests==2.12.4
+whitenoise==3.2.2
