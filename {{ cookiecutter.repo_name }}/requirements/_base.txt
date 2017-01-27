@@ -9,6 +9,6 @@ gunicorn==19.6.0
 lxml==3.7.1
 pbr==1.10.0
 psycopg2==2.6.2
-redis==2.13.0
+redis==2.10.5
 requests==2.12.4
 whitenoise==3.2.2
