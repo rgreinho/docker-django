@@ -18,7 +18,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    entrypoint: bash -c /django-entrypoint.sh
+    entrypoint: bash
+    command: /django-entrypoint.sh
     volumes:
       - .:/code
     ports:
