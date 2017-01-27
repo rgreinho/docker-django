@@ -49,4 +49,4 @@ venv/bin/activate: requirements/local.txt
 wheel:
 	$(DOCKER_COMPOSE_RUN_FULL) python setup.py bdist_wheel
 
-.PHONY: ci-coala ci-docs ci-python clean docs docker-build docker-build-base format format-check wheel
+.PHONY: ci-coala ci-docs ci-test clean docs format format-check wheel
