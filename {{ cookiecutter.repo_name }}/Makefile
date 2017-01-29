@@ -13,6 +13,11 @@ help:
 	@echo "ci-docs            - Ensure the documentation builds"
 	@echo "ci-tests           - Run the unit tests"
 	@echo "clean              - Remove unwanted files in project (!DESTRUCTIVE!)"
+	@echo "django-dbup        - Ensure Django DB is up and runnig"
+	@echo "django-migrate     - Run the Django migrations"
+	@echo "django-migrations  - Prepare the Django migrations"
+	@echo "django-shell       - Run the Django Shell"
+	@echo "django-superuser   - Create the Django super user"
 	@echo "docs               - Build documentation"
 	@echo "format             - Format the codebase using YAPF"
 	@echo "format-check       - Check the code formatting using YAPF"
@@ -30,6 +35,22 @@ ci-tests:
 
 clean:
 	cd $(TOPDIR); git clean -ffdx
+
+django-dbup:
+	@docker-compose up -d db;
+	$(DOCKER_COMPOSE_RUN_CMD) $(DOCKER_COMPOSE_RUN_DJANGO_OPTS) db bash -c "until psql -h \"db\" -U \"postgres\" -c '\l' >/dev/null 2>&1; do sleep 1; done"
+
+django-migrate: django-dbup
+	$(DOCKER_COMPOSE_RUN_DJANGO_FULL) migrate
+
+django-migrations: django-dbup
+	$(DOCKER_COMPOSE_RUN_DJANGO_FULL) makemigrations
+
+django-shell: django-dbup
+	$(DOCKER_COMPOSE_RUN_DJANGO_FULL) shell
+
+django-superuser: django-dbup
+	$(DOCKER_COMPOSE_RUN_DJANGO_FULL) createsuperuser
 
 docs:
 	$(DOCKER_COMPOSE_RUN_FULL) python setup.py build_sphinx --builder=html
