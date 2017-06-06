@@ -1,18 +1,32 @@
 {{ cookiecutter.repo_name }}
-============================
+================
 
 {{ cookiecutter.project_short_description }}
 
-Build the docs
---------------
+Quickstart
+----------
 
-The documentation describes the use of the {{ cookiecutter.repo_name }} as well as detailing some part of the
- implementations.
+Install `docker`_ and `docker-compose`_.
 
-To build the documentation:
+Setup the full environment::
 
-.. code-block:: bash
+  make
 
-  make docs
+Start the services::
 
-And then browse to `docs/build/html/index.html`
+  docker-compose up [-d]
+
+The `-d` switch allows you to start the services in the background. Without it, the logs would be printed on the
+console, and you would need to press `CTRL-C` to stop the services.
+
+Using the web devtools
+----------------------
+
+The `loannister/web-devtools:1.1.0` image contains all the tools you need to start the project (`polymer-cli`, `bower` `gulp`, etc.). You do no necessaryly need to install any of them.
+
+The unit test will run on `Firefox ESR 52`.
+
+`make help` will show you the available targets.
+
+.. _`docker`: https://docs.docker.com/engine/understanding-docker/
+.. _`docker-compose`: https://docs.docker.com/compose/overview/

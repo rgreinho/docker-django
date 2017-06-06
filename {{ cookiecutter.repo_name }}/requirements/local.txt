@@ -2,8 +2,8 @@
 -r _docs.txt
 -r _tests.txt
 
-bpython
-q
-tox==2.3.2
+bpython==0.16
+q==2.6
+tox==2.7.0
 wheel==0.29.0
-yapf==0.15.1
+yapf==0.16.2

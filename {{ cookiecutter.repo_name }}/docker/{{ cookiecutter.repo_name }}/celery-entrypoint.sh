@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Gets the Celery command, defaults to worker.
+# Read entrypoint parameters.
 CELERY_COMMAND=${1:-worker}
 
-# Wait for the django service to run to ensure the migrations were performed.
-echo -n "Starting Celery ${CELERY_COMMAND}."
-while ! curl --output /dev/null --silent --head --fail http://django:8000; do
-    sleep 1
-    echo -n .
-done;
+# Define variables.
+: ${{ '{' }}{{ cookiecutter.prefix|upper }}_{{ cookiecutter.repo_name|upper }}_CELERY_APP:-{{ cookiecutter.repo_name }}.celery}
+: ${{ '{' }}{{ cookiecutter.prefix|upper }}_{{ cookiecutter.repo_name|upper }}_CELERY_LOG_LEVEL:-info}
 
 # Start Celery command.
-DATE=$(date -u +%Y-%m-%dT%H%M%S%Z)
-su -m celery -c "celery ${CELERY_COMMAND} -A {{ cookiecutter.repo_name }} -l info --pidfile=celery_worker-${DATE}.pid"
+DATE=$(date -u +%Y%m%dT%H%M%S%Z)
+su -m celery -c "celery ${CELERY_COMMAND} \
+  -A ${{ '{' }}{{ cookiecutter.prefix|upper }}_{{ cookiecutter.repo_name|upper }}_CELERY_APP} \
+  -l ${{ '{' }}{{ cookiecutter.prefix|upper }}_{{ cookiecutter.repo_name|upper }}_CELERY_LOG_LEVEL} \
+  --pidfile=celery_${CELERY_COMMAND}-${DATE}.pid"

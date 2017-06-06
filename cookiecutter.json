@@ -3,8 +3,10 @@
 	"project_short_description": "Describe your project in one line.",
     "django_app": "the name of your django application",
 	"version": "0.1.0",
+  "organization": "my_org",
+  "prefix": "short prefix to use for the project (i.e. 'ORG')",
 	"author": "put your name here",
 	"author_email": "put your name here",
-	"year": "replace with the current year",
+	"year": "2017",
 	"license": "MIT"
 }
