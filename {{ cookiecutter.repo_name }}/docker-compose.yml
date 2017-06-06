@@ -1,20 +1,20 @@
 version: '2'
 services:
-  db:
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-db:
     image: postgres:9.6.1
-  nginx:
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-nginx:
     build: docker/nginx
     depends_on:
-      - django
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django
     ports:
-      - "80:80"
-  redis:
-    image: redis:3.0
-  rabbitmq:
-    image: rabbitmq:3.6-management
+      - "10080:80"
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-redis:
+    image: redis:3.2.9
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-rabbitmq:
+    image: rabbitmq:3.6.10-management
     ports:
       - "15672:15672"
-  django:
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -22,53 +22,54 @@ services:
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "18000:8000"
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
       REDIS_URL: redis://redis:6379
-      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
-      CELERY_RESULT_BACKEND: amqp://guest:guest@rabbitmq:5672//
+    env_file:
+      - docker/env-files/celery.env
     depends_on:
-      - db
-      - redis
-  celery_beat:
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-db
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-redis
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-celery_beat:
     build:
       context: .
       dockerfile: Dockerfile.dev
     command: bash /celery-entrypoint.sh beat
     depends_on:
-      - django
-      - rabbitmq
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-rabbitmq
     volumes:
       - .:/code
-    environment:
-      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
-      CELERY_RESULT_BACKEND: amqp://guest:guest@rabbitmq:5672//
-  celery_worker:
+    env_file:
+      - docker/env-files/celery.env
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-celery_worker:
     build:
       context: .
       dockerfile: Dockerfile.dev
     command: bash /celery-entrypoint.sh worker
     depends_on:
-      - django
-      - rabbitmq
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-rabbitmq
     volumes:
       - .:/code
-    environment:
-      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
-      CELERY_RESULT_BACKEND: amqp://guest:guest@rabbitmq:5672//
-  celery_flower:
+    env_file:
+      - docker/env-files/celery.env
+  {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-celery_flower:
     build:
       context: .
       dockerfile: Dockerfile.dev
     command: bash /celery-entrypoint.sh flower
     depends_on:
-      - django
-      - rabbitmq
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django
+      - {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-rabbitmq
     ports:
-      - "5555:5555"
+      - "15555:5555"
     volumes:
       - .:/code
-    environment:
-      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
-      CELERY_RESULT_BACKEND: amqp://guest:guest@rabbitmq:5672//
+    env_file:
+      - docker/env-files/celery.env
+
+networks:
+  {{ cookiecutter.organization }}:
+    external: true
