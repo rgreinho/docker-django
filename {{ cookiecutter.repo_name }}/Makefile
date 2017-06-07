@@ -12,7 +12,7 @@ DOCKER_IMAGE_COALA = coala/base:pre
 # Docker compose run generic parameters.
 DOCKER_COMPOSE_RUN_CMD = docker-compose run
 DOCKER_COMPOSE_RUN_OPTS = --no-deps --rm
-DOCKER_COMPOSE_RUN_SVC = django
+DOCKER_COMPOSE_RUN_SVC = {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django
 DOCKER_COMPOSE_RUN_FULL = $(DOCKER_COMPOSE_RUN_CMD) $(DOCKER_COMPOSE_RUN_OPTS) $(DOCKER_COMPOSE_RUN_SVC)
 
 # Docker compose run Django parameters.
@@ -35,7 +35,7 @@ ci-docs: ## Ensure the documentation builds
 	$(DOCKER_COMPOSE_RUN_FULL) tox -e docs
 
 ci-tests: ## Run the unit tests
-	$(DOCKER_COMPOSE_RUN_FULL) tox -e py35
+	$(DOCKER_COMPOSE_RUN_FULL) tox
 
 clean: ## Remove unwanted files in project (!DESTRUCTIVE!)
 	cd $(TOPDIR); git clean -ffdx
@@ -88,4 +88,4 @@ venv/bin/activate: requirements/local.txt
 wheel: ## Build a wheel package
 	$(DOCKER_COMPOSE_RUN_FULL) python setup.py bdist_wheel
 
-.PHONY: ci-coala ci-docs ci-test clean django-migrate django-migrations django-shell django-superuser docker-clean docker-network docs format format-check setup wheel
+.PHONY: ci-coala ci-docs ci-tests clean django-migrate django-migrations django-shell django-superuser docker-clean docker-network docs format format-check setup wheel

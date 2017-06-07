@@ -55,6 +55,8 @@ services:
       - .:/code
     env_file:
       - docker/env-files/celery.env
+    networks:
+      - {{ cookiecutter.organization }}
   {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-celery_flower:
     build:
       context: .

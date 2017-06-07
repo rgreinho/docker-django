@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.6.1-slim
 
 MAINTAINER {{ cookiecutter.author }} <{{ cookiecutter.author_email }}>
 
@@ -11,7 +11,10 @@ ENV PYTHONUNBUFFERED 1
 
 # Update the package list.
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+
+    # Install git.
+    git \
 
     # Install postgresql client.
     postgresql-client-9.4 \
@@ -22,6 +25,9 @@ RUN apt-get update \
 
 # Copy the requirements files.
 COPY requirements/* /requirements/
+
+# Upgrade pip.
+RUN pip install --upgrade pip==9.0.1
 
 # Install the pip packages.
 RUN pip install -q -r /requirements/local.txt
