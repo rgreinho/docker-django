@@ -24,8 +24,8 @@ services:
     ports:
       - "18000:8000"
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
-      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://postgres:postgres@{{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-db:5432/postgres
+      REDIS_URL: redis://{{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-redis:6379
     env_file:
       - docker/env-files/celery.env
     depends_on:
@@ -56,7 +56,7 @@ services:
     env_file:
       - docker/env-files/celery.env
     networks:
-      - {{ cookiecutter.organization }}
+      - {{ cookiecutter.organization|lower }}
   {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-celery_flower:
     build:
       context: .
@@ -73,5 +73,5 @@ services:
       - docker/env-files/celery.env
 
 networks:
-  {{ cookiecutter.organization }}:
+  {{ cookiecutter.organization|lower }}:
     external: true
