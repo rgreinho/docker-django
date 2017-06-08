@@ -2,11 +2,11 @@
 set -euo pipefail
 
 # Define variables.
-: ${{ '{' }}{{ cookiecutter.prefix|upper }}_{{ cookiecutter.repo_name }}_API_PORT:=8000}
+: ${{ '{' }}{{ cookiecutter.prefix|upper }}_{{ cookiecutter.repo_name|upper }}_API_PORT:=8000}
 
 # Ensure the DB is up and running before starting Django.
 >&2 echo -n "Waiting for DB to be up and running."
-until psql -h "{{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-db" -U "postgres" -c '\l'; do
+until psql -h "{{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name|lower }}-db" -U "postgres" -c '\l'; do
   sleep 1
   >&2 echo -n .
 done
