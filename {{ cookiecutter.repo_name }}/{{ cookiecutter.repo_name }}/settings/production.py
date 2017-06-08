@@ -11,8 +11,4 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # Get tbe production allowed hosts from the environment variables, or limit it to localhost only.
-ALLOWED_HOSTS = os.environ.['DJANGO_ALLOWED_HOSTS'].split(',')
-
-# Update database configuration with ${DATABASE_URL}.
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split(',')
