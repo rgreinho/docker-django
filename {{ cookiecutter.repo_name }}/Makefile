@@ -14,6 +14,7 @@ DOCKER_COMPOSE_RUN_CMD = docker-compose run
 DOCKER_COMPOSE_RUN_OPTS = --no-deps --rm
 DOCKER_COMPOSE_RUN_SVC = {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-django
 DOCKER_COMPOSE_RUN_FULL = $(DOCKER_COMPOSE_RUN_CMD) $(DOCKER_COMPOSE_RUN_OPTS) $(DOCKER_COMPOSE_RUN_SVC)
+DOCKER_DB_CONTAINER = {{ cookiecutter.prefix|lower }}-{{ cookiecutter.repo_name }}-db
 
 # Docker compose run Django parameters.
 DOCKER_COMPOSE_RUN_DJANGO_MANAGE_CMD = python manage.py
@@ -41,13 +42,13 @@ clean: ## Remove unwanted files in project (!DESTRUCTIVE!)
 	cd $(TOPDIR); git clean -ffdx
 
 django-dbup: # Ensure Django DB is up and runnig
-	@docker-compose up -d db;
-	$(DOCKER_COMPOSE_RUN_CMD) $(DOCKER_COMPOSE_RUN_DJANGO_OPTS) db bash -c "until psql -h \"db\" -U \"postgres\" -c '\l' >/dev/null 2>&1; do sleep 1; done"
+	@docker-compose up -d $(DOCKER_DB_CONTAINER);
+	$(DOCKER_COMPOSE_RUN_CMD) $(DOCKER_COMPOSE_RUN_DJANGO_OPTS) $(DOCKER_DB_CONTAINER) bash -c "until psql -h \"$(DOCKER_DB_CONTAINER)\" -U \"postgres\" -c '\l' >/dev/null 2>&1; do sleep 1; done"
 
 django-migrate: django-dbup ## Run the Django migrations
 	$(DOCKER_COMPOSE_RUN_DJANGO_FULL) migrate
 
-django-migrations: django-dbup ## Prepare the Django migrations
+django-make-migrations: django-dbup ## Prepare the Django migrations
 	$(DOCKER_COMPOSE_RUN_DJANGO_FULL) makemigrations
 
 django-shell: django-dbup ## Run the Django Shell
@@ -88,4 +89,4 @@ venv/bin/activate: requirements/local.txt
 wheel: ## Build a wheel package
 	$(DOCKER_COMPOSE_RUN_FULL) python setup.py bdist_wheel
 
-.PHONY: ci-coala ci-docs ci-tests clean django-migrate django-migrations django-shell django-superuser docker-clean docker-network docs format format-check setup wheel
+.PHONY: ci-coala ci-docs ci-tests clean django-migrate django-make-migrations django-shell django-superuser docker-clean docker-network docs format format-check setup wheel
