@@ -5,6 +5,7 @@ django-model-utils==3.0.0
 django-redis-cache==1.7.1
 flower==0.9.1
 gunicorn==19.7.1
+json-tricks==3.8.0
 lxml==3.8.0
 pbr==3.0.1
 psycopg2==2.7.1
