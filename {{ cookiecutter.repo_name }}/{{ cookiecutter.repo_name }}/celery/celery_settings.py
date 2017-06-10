@@ -11,7 +11,7 @@ register('json_tricks.nonp', dumps, loads, content_type='application/x-json-tric
 
 # Global configuration.
 accept_content = ['application/json', 'application/x-json-tricks']
-imports = ('processor.celery.tasks', )
+imports = ('{{ cookiecutter.repo_name }}.celery.tasks', )
 timezone = 'America/Chicago'
 
 # Beat configuration.
