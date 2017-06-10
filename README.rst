@@ -1,4 +1,3 @@
-==========================
 django-docker-cookiecutter
 ==========================
 
@@ -19,6 +18,26 @@ A working git repo for pbr to work, on newer versions of cookiecutter (>= 0.7.0 
 Then:
 
 * Add the project to your GitHub account.
+
+Features
+--------
+
+* 1 command setup!
+* Uses a Makefile to easily execute common administration tasks
+  * Tests (pytest, coala)
+  * Documentation (sphinx)
+  * Packaging
+  * Clean up
+  * Django commands
+* Fully Dockerized (i.e. no need to install anything)
+* Sets up a developper environment with docker-compose
+* Uses Celery to execute distributed tasks
+* Preconfigured to execute unit tests, documentation tests and static analysis
+* Preconfigured to build the Sphinx documentation
+* Preconfigured to use YAPF for auto-formatting
+* Preconfigured to use editorconfig
+* Preconfigured to use Github templates
+
 
 Not Exactly What You Want?
 ---------------------------
