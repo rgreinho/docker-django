@@ -68,7 +68,7 @@ docker-network: ## Create a Loannister bridge network
 	fi
 
 docs: ## Build documentation
-	$(DOCKER_COMPOSE_RUN_FULL) python setup.py build_sphinx --builder=html
+	$(DOCKER_COMPOSE_RUN_FULL) sphinx-build -b html -d docs/build/doctrees docs/source/ docs/build/html
 
 format: ## Format the codebase using YAPF
 	$(DOCKER_COMPOSE_RUN_FULL) yapf -r -i .
@@ -85,6 +85,7 @@ venv: venv/bin/activate ## Setup local venv
 venv/bin/activate: requirements/local.txt
 	test -d venv || virtualenv -p $(PYTHON_EXE) venv
 	. venv/bin/activate; pip install -U pip; pip install -r requirements/local.txt
+	. venv/bin/activate; python setup.py develop
 
 wheel: ## Build a wheel package
 	$(DOCKER_COMPOSE_RUN_FULL) python setup.py bdist_wheel

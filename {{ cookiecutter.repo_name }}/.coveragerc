@@ -2,3 +2,6 @@
 omit =
     *__init__.py
     {{ cookiecutter.repo_name }}/apps/{{ cookiecutter.django_app }}/tests/*
+    {{ cookiecutter.repo_name }}/settings/*
+    {{ cookiecutter.repo_name }}/urls.py
+    {{ cookiecutter.repo_name }}/wsgi.py
