@@ -1,0 +1,91 @@
+version: '3'
+services:
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-db:
+    image: postgres:9.6.1
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-nginx:
+    build: docker/nginx
+    depends_on:
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-django
+    ports:
+      - "10080:80"
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-redis:
+    image: redis:3.2.9
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-rabbitmq:
+    image: rabbitmq:3.6.10-management
+    ports:
+      - "15672:15672"
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-django:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash /django-entrypoint.sh
+    volumes:
+      - .:/code
+    ports:
+      - "18000:8000"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@{{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-db:5432/postgres
+      REDIS_URL: redis://{{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-redis:6379
+    env_file:
+      - docker/env-files/celery.env
+    depends_on:
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-db
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-redis
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash /celery-entrypoint.sh beat
+    depends_on:
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-django
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-rabbitmq
+    volumes:
+      - .:/code
+    env_file:
+      - docker/env-files/celery.env
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash /celery-entrypoint.sh worker
+    depends_on:
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-django
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-rabbitmq
+    volumes:
+      - .:/code
+    env_file:
+      - docker/env-files/celery.env
+    networks:
+      - {{ cookiecutter.organization|lower }}
+  {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-celery_flower:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash /celery-entrypoint.sh flower
+    depends_on:
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-django
+      - {{ cookiecutter.organization|lower }}-{{ cookiecutter.project_name }}-rabbitmq
+    ports:
+      - "15555:5555"
+    volumes:
+      - .:/code
+    env_file:
+      - docker/env-files/celery.env
+    networks:
+      - {{ cookiecutter.organization|lower }}
+
+networks:
+  {{ cookiecutter.organization|lower }}:
+    external: true

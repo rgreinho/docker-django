@@ -1,0 +1,32 @@
+FROM python:3.6.4-slim-stretch
+
+MAINTAINER {{ cookiecutter.author }} <{{ cookiecutter.author_email }}>
+
+# Create the directory containing the code.
+RUN mkdir -p /code /requirements
+WORKDIR /code
+
+# Define environment variables.
+ENV PYTHONUNBUFFERED 1
+
+# Update the package list.
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Copy the requirements files.
+COPY requirements.txt /requirements/
+
+# Upgrade pip.
+RUN pip install --upgrade pip==9.0.1 && pip install -q -r /requirements/requirements.txt tox==2.9.1
+
+# Copy django entry point.
+COPY docker/{{ cookiecutter.project_name }}/django-entrypoint.sh /
+
+# Create unprivileged user for celery.
+RUN adduser --disabled-password --gecos '' celery
+
+# Copy celery worker entry point.
+COPY docker/{{ cookiecutter.project_name }}/celery-entrypoint.sh /

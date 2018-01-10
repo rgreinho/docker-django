@@ -1,12 +1,11 @@
 {
-	"repo_name": "Replace with the name for the git repo",
+	"project_name": "project",
 	"project_short_description": "Describe your project in one line.",
-  "organization": "my_org",
-  "prefix": "Short prefix to use for the project (i.e. 'ORG')",
-  "django_app": "The name of your django application",
-	"author": "",
-	"author_email": "",
+  "organization": "org",
+  "django_app": "django_application",
+  "author": "author_name",
+  "author_email": "author@company.com",
 	"version": "0.0.1",
-	"year": "2017",
+	"year": "2018",
 	"license": "MIT"
 }
