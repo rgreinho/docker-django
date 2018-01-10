@@ -1,0 +1,6 @@
+[run]
+omit =
+    *__init__.py
+    {{ cookiecutter.project_name }}/settings/*
+    {{ cookiecutter.project_name }}/urls.py
+    {{ cookiecutter.project_name }}/wsgi.py
